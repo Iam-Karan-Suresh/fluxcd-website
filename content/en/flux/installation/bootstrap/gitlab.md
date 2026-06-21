@@ -24,6 +24,28 @@ or to have admin rights of a GitLab group.
 For accessing the GitLab API, the bootstrap command requires a GitLab personal access token (PAT)
 with complete read/write access to the GitLab API.
 
+{{% alert color="info" title="GitLab fine-grained PAT" %}}
+Bootstrap can be run with a GitLab [fine-grained personal access token](https://docs.gitlab.com/auth/tokens/fine_grained_access_tokens/),
+for repositories that are created ahead of time.
+
+When using `--deploy-token-auth` (the default), the fine-grained PAT must be generated with the following
+**Group and project** permissions:
+
+- `Project` -> `Read`
+- `Code` -> `Download`, `Push`
+- `Deploy Token` -> `Create`, `Read`, `Delete`
+
+When using `--token-auth=false` (SSH with [deploy keys](#gitlab-deploy-keys)), replace `Deploy Token` with:
+
+- `Deploy Key` -> `Create`, `Read`, `Delete`
+
+If you want to use `--token-auth` (store the PAT in the cluster for HTTPS access), the `Deploy Token`
+and `Deploy Key` permissions are not required.
+
+Note that when the project does not exist and needs to be created by Flux, the full `api` scope is
+required, as project creation is not yet fully supported by fine-grained tokens.
+{{% /alert %}}
+
 The GitLab PAT can be exported as an environment variable:
 
 ```sh
